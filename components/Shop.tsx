@@ -7,7 +7,6 @@ const Shop = () => {
     return (
 
         <div className="bg-white">
-
             <TopHeader />
 
             {/* Header Section */}

@@ -1,74 +1,9 @@
 import React from "react";
 import Footer from "./Footer";
+import BestsellerProducts from "./BestsellerProducts";
 
 const AdditionalInfo = () => {
 
-    const products = [
-        {
-            id: 1,
-            image: "/images/pro.jpg",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-        {
-            id: 2,
-            image: "/images/pro1.png",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-        {
-            id: 3,
-            image: "/images/pro2.png",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-        {
-            id: 4,
-            image: "/images/pro1.png",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-        {
-            id: 3,
-            image: "/images/pro2.png",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-        {
-            id: 1,
-            image: "/images/pro.jpg",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-        {
-            id: 4,
-            image: "/images/pro1.png",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-        {
-            id: 1,
-            image: "/images/pro.jpg",
-            title: "Graphic Design",
-            department: "English Department",
-            price: "$16.48",
-            discountedPrice: "$6.48",
-        },
-    ];
     return (
         <div className=" px-4 sm:px-6 my-16 lg:px-8">
             {/* Tabs Section */}
@@ -143,19 +78,19 @@ const AdditionalInfo = () => {
                 </div>
             </div>
 
-            <div className="bg-white my-8 px-4 sm:px-6 lg:px-8">
+            {/* <div className="bg-white my-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-[1440px] mx-auto">
-                    {/* Title */}
+                   
                     <h2 className="text-2xl font-bold text-gray-800 mb-6">Bestseller Products</h2>
 
-                    {/* Products Grid */}
+                   
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {products.map((product) => (
                             <div
                                 key={product.id}
                                 className="border rounded-lg shadow hover:shadow-lg transition-shadow duration-300"
                             >
-                                {/* Product Image */}
+                               
                                 <div className="w-full h-56 overflow-hidden rounded-t-lg">
                                     <img
                                         src={product.image}
@@ -164,7 +99,7 @@ const AdditionalInfo = () => {
                                     />
                                 </div>
 
-                                {/* Product Details */}
+                               
                                 <div className="p-4">
                                     <h3 className="text-lg font-bold text-gray-800">{product.title}</h3>
                                     <p className="text-sm text-gray-500">{product.department}</p>
@@ -190,8 +125,9 @@ const AdditionalInfo = () => {
                         />
                     ))}
                 </div>
-            </div>
+            </div> */}
 
+            <BestsellerProducts/>
             <Footer/>
         </div>
     );
