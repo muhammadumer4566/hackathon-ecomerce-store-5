@@ -1,6 +1,3 @@
-import React from "react";
-import Footer from "./Footer";
-import BestsellerProducts from "./BestsellerProducts";
 
 const AdditionalInfo = () => {
 
@@ -127,8 +124,7 @@ const AdditionalInfo = () => {
                 </div>
             </div> */}
 
-            <BestsellerProducts/>
-            <Footer/>
+            
         </div>
     );
 };

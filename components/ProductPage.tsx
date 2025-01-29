@@ -1,20 +1,26 @@
-'use client'
-import React, { useEffect, useState } from "react";
-import { EyeIcon, HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import AdditionalInfo from "./AdditionalInfo";
-import TopHeader from "./TopHeader";
-import dotenv from 'dotenv';
-dotenv.config();
-import { createClient } from '@sanity/client';
+"use client";
 
-// Define the type for the product data
+import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { createClient } from "@sanity/client";
+import dotenv from "dotenv";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import BestsellerProducts from "./BestsellerProducts";
+import Footer from "./Footer";
+import TopHeader from "./TopHeader";
+import Image from "next/image";
+import { useCart } from "@/context/CartContext";
+import { toast } from "react-hot-toast"; // Importing toast from react-hot-toast
+
+dotenv.config();
+
 interface Product {
   _id: string;
   title: string;
   price: number;
   productImage: string;
   tags: string[];
-  discountPercentage: number;
+  dicountPercentage: number;
   description: string;
   isNew: boolean;
 }
@@ -23,133 +29,131 @@ const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_PROJECT_DATASET,
   useCdn: true,
-  apiVersion: '2025-01-13',
+  apiVersion: "2025-01-13",
   token: process.env.NEXT_PUBLIC_SANITY_API_TOKEN,
 });
 
 const ProductPage = () => {
-  // Specify the product type for useState
   const [product, setProduct] = useState<Product | null>(null);
+  const { id } = useParams();
+  const { addToCart } = useCart(); // Cart context to manage the cart
 
-  // Fetch product data from Sanity
   useEffect(() => {
     async function fetchProduct() {
-      const query = `*[_type == "product"]{
+      if (!id) return;
+
+      const query = `*[_type == "product" && _id == $id]{
         _id,
         title,
         price,
         "productImage": productImage.asset->url,
         tags,
-        discountPercentage,
+        dicountPercentage,
         description,
         isNew
       }`;
 
       try {
-        const fetchedProduct: Product[] = await client.fetch(query);
-        // Assuming you have only one product or you want to display the first one
-        setProduct(fetchedProduct[0] || null); // Set null if no product found
+        const fetchedProduct: Product[] = await client.fetch(query, { id });
+        setProduct(fetchedProduct[0] || null);
       } catch (error) {
         console.error("Error fetching product data from Sanity:", error);
       }
     }
 
     fetchProduct();
-  }, []);
+  }, [id]);
 
-  // Ensure product data is loaded before rendering
   if (!product) {
     return <div>Loading...</div>;
   }
+
+  const discountedPrice =
+    product.price - (product.price * product.dicountPercentage) / 100;
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart({
+        id: product._id,
+        title: product.title,
+        price: product.price,
+        discountedPrice,
+        productImage: product.productImage,
+        quantity: 1,
+      });
+      toast.success("Product added to cart successfully!", {
+        position: "top-center", 
+      });
+    }
+  };
 
   return (
     <>
       <TopHeader />
       <div className="bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
         <div className="max-w-[1440px] mx-auto text-sm text-gray-500 mb-6">
           <span>Home</span> &gt; <span>Shop</span>
         </div>
 
-        {/* Product Section */}
         <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Section - Product Images */}
           <div className="flex flex-col">
             <div className="relative w-full h-[400px] bg-gray-100 rounded-lg overflow-hidden">
-              <img
+              <Image
                 src={product.productImage}
-                alt="Main Product"
+                alt={product.title}
+                width={400}
+                height={400}
                 className="w-full h-full object-cover"
               />
-              <button className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white rounded-full shadow p-2">
-                &lt;
-              </button>
-              <button className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white rounded-full shadow p-2">
-                &gt;
-              </button>
-            </div>
-            <div className="flex justify-center gap-4 mt-4">
-              {["/images/pro1.png", "/images/pro1.png"].map((thumb, index) => (
-                <img
-                  key={index}
-                  src={thumb}
-                  alt={`Thumbnail ${index + 1}`}
-                  className="w-20 h-20 object-cover rounded-lg border border-gray-300 hover:border-blue-500"
-                />
-              ))}
             </div>
           </div>
 
-          {/* Right Section - Product Details */}
-          <div className="flex flex-col justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">{product.title}</h1>
-              <div className="flex items-center mt-2">
-                <div className="flex text-yellow-400 text-sm">
-                  ★★★★★
-                </div>
-                <span className="text-sm text-gray-500 ml-2">(10 Reviews)</span>
-              </div>
-              <p className="text-lg font-bold text-gray-800 mt-4">${product.price}</p>
-              <p className="text-sm text-gray-500 mt-1">
-                Availability: <span className="text-green-500">In Stock</span>
+          <div className="flex flex-col py-5">
+            <h1 className="text-2xl font-bold text-gray-800">{product.title}</h1>
+            <div className="mt-4 flex gap-2 flex-wrap">
+              {product.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="bg-gray-300 text-black py-1 px-3 rounded-full text-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div className="mt-6 flex items-center">
+              <p className="text-lg font-bold text-red-600 line-through mr-4">
+                ${product.price.toFixed(2)}
               </p>
-              <p className="text-sm text-gray-600 mt-4 line-clamp-5">{product.description}</p>
+              <p className="text-lg font-bold text-green-600">
+                ${discountedPrice.toFixed(2)}
+              </p>
+              <span className="text-sm text-gray-600 ml-2">
+                ({product.dicountPercentage}% off)
+              </span>
             </div>
+            <p className="text-sm text-gray-600 mt-2 line-clamp-6">
+              {product.description}
+            </p>
 
-            {/* Color Options */}
-            <div className="mt-4">
-              <h3 className="text-sm font-bold text-gray-800 mb-2">Colors</h3>
-              <div className="flex gap-4">
-                {["bg-green-500", "bg-orange-500", "bg-blue-500", "bg-gray-700"].map(
-                  (color, index) => (
-                    <span
-                      key={index}
-                      className={`w-8 h-8 ${color} rounded-full border border-gray-300 hover:scale-110 cursor-pointer`}
-                    />
-                  )
-                )}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="mt-6 flex gap-4">
-              <div className="bg-blue-500 text-white px-6 py-2 rounded-lg font-medium shadow hover:bg-blue-600">
-                Select Options
-              </div>
-              <div className="bg-gray-200 p-3 rounded-lg hover:bg-gray-300">
-                <ShoppingCartIcon className="h-5 w-5" />
-              </div>
-              <button className="bg-gray-200 p-3 rounded-lg hover:bg-gray-300">
-                <HeartIcon className="h-5 w-5" />
+            <div className="mt-7 flex gap-4 items-center">
+              <button
+                onClick={handleAddToCart}
+                className="bg-green-900 text-white px-4 py-2 rounded font-medium flex items-center"
+              >
+                <ShoppingCartIcon className="h-5 w-5 mr-2" />
+                Add to Cart
               </button>
-              <button className="bg-gray-200 p-3 rounded-lg hover:bg-gray-300">
-                <EyeIcon className="h-5 w-5" />
+              <button className="bg-gray-300 p-3 rounded flex items-center">
+                <HeartIcon className="h-5 w-5 text-red-500" />
               </button>
             </div>
           </div>
         </div>
-        <AdditionalInfo />
+
+        {/* Display all products at the bottom */}
+        <BestsellerProducts displayAll currentTitle={product.title} />
+        <Footer />
       </div>
     </>
   );

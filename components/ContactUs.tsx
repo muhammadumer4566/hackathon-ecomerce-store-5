@@ -45,9 +45,6 @@ const ContactUs = () => {
                         <a href="/" className="hover:text-gray-900">
                             Home
                         </a>
-                        <a href="/productpage" className="hover:text-gray-900">
-                            Product
-                        </a>
                         <a href="/pricing" className="hover:text-gray-900">
                             Pricing
                         </a>
@@ -72,9 +69,6 @@ const ContactUs = () => {
                     <div className="mt-4 space-y-4 md:hidden">
                         <a href="/" className="block text-sm font-medium text-gray-600 hover:text-gray-900">
                             Home
-                        </a>
-                        <a href="/productpage" className="block text-sm font-medium text-gray-600 hover:text-gray-900">
-                            Product
                         </a>
                         <a href="/pricing" className="block text-sm font-medium text-gray-600 hover:text-gray-900">
                             Pricing

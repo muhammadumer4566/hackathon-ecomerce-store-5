@@ -5,6 +5,9 @@ import "swiper/css/pagination";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
+import { Toaster } from "react-hot-toast";
+import { OrderProvider } from "@/context/OrderContext";
 
 const font = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
@@ -45,8 +48,13 @@ export default function RootLayout({
             justifyContent: "flex-start",
             width: "100%",
           }}
-        >
+        > <Toaster position="top-center" />
+        
+        <OrderProvider>
+          <CartProvider>
           {children}
+          </CartProvider>
+        </OrderProvider>
         </div>
       </body>
     </html>

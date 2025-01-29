@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import React, { useState } from "react";
 import {
   UserIcon,
@@ -7,10 +8,12 @@ import {
   HeartIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext"; // Import the Cart Context
+
 
 const TopHeader = () => {
-
   const [isOpen, setIsOpen] = useState(false);
+  const { cartItems } = useCart(); // Get cart items from context
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -25,12 +28,26 @@ const TopHeader = () => {
           <span>✉️ michelle.rivera@example.com</span>
         </div>
         <div className="flex items-center gap-4 sm:gap-9 mt-2 sm:mt-0">
-          <span className="hidden sm:inline">Follow Us and get a chance to win 80% off</span>
+          <span className="hidden sm:inline">
+            Follow Us and get a chance to win 80% off
+          </span>
           <div className="flex items-center gap-2">
             <span className="hidden sm:inline">Follow Us:</span>
-            <img src="/about/insta2.png" alt="Instagram" className="w-4 h-4" />
-            <img src="/about/Icon-Facebook.png" alt="Facebook" className="w-4 h-4" />
-            <img src="/about/Icon-Twitter2.png" alt="Twitter" className="w-4 h-4" />
+            <img
+              src="/about/insta2.png"
+              alt="Instagram"
+              className="w-4 h-4"
+            />
+            <img
+              src="/about/Icon-Facebook.png"
+              alt="Facebook"
+              className="w-4 h-4"
+            />
+            <img
+              src="/about/Icon-Twitter2.png"
+              alt="Twitter"
+              className="w-4 h-4"
+            />
             <img src="/about/link2.png" alt="YouTube" className="w-4 h-4" />
           </div>
         </div>
@@ -43,42 +60,41 @@ const TopHeader = () => {
 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex gap-6">
-            <a href="/" className="text-gray-700 hover:text-blue-500">
+            <Link href="/" className="text-gray-700 hover:text-blue-500">
               Home
-            </a>
+            </Link>
             <Link href="/shop" className="text-gray-700 hover:text-blue-500">
               Shop
             </Link>
-            <a href="/about" className="text-gray-700 hover:text-blue-500">
+            <Link href="/about" className="text-gray-700 hover:text-blue-500">
               About
-            </a>
-            <a href="#" className="text-gray-700 hover:text-blue-500">
-              Blog
-            </a>
-            <a href="/contact" className="text-gray-700 hover:text-blue-500">
+            </Link>
+            <Link href="/contact" className="text-gray-700 hover:text-blue-500">
               Contact
-            </a>
-            <a href="#" className="text-gray-700 hover:text-blue-500">
-              Pages
-            </a>
+            </Link>
           </div>
 
           {/* Action Icons */}
           <div className="flex items-center gap-3">
-            <a href="#" className="flex items-center gap-1 text-blue-500">
+            <Link href="/login" className="flex items-center gap-1 text-blue-500">
               <UserIcon className="w-5 h-5" />
               <span className="hidden md:inline">Login / Register</span>
-            </a>
+            </Link>
             <MagnifyingGlassIcon className="w-5 h-5 text-blue-500" />
-            <a href="/productpage">
-              <div className="flex items-center gap-1">
+            {/* Cart Icon */}
+            <Link href="/cart">
+              <div className="relative flex items-center gap-1">
                 <ShoppingCartIcon className="w-5 h-5 text-blue-500" />
-                <span className="text-sm text-blue-500">1</span>
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartItems.length}
+                  </span>
+                )}
               </div>
-            </a>
-            <div className="flex items-center gap-1">
+            </Link>
+            {/* Wishlist Icon */}
+            <div className="relative flex items-center gap-1">
               <HeartIcon className="w-5 h-5 text-blue-500" />
-              <span className="text-sm text-blue-500">1</span>
             </div>
           </div>
 
@@ -98,7 +114,11 @@ const TopHeader = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                d={
+                  isOpen
+                    ? "M6 18L18 6M6 6l12 12"
+                    : "M4 6h16M4 12h16M4 18h16"
+                }
               />
             </svg>
           </button>
@@ -107,24 +127,18 @@ const TopHeader = () => {
         {/* Mobile Nav Links */}
         {isOpen && (
           <div className="lg:hidden bg-white shadow-md py-4 px-4 flex flex-col gap-4">
-            <a href="/" className="text-gray-700 hover:text-blue-500">
+            <Link href="/" className="text-gray-700 hover:text-blue-500">
               Home
-            </a>
+            </Link>
             <Link href="/shop" className="text-gray-700 hover:text-blue-500">
               Shop
             </Link>
-            <a href="/about" className="text-gray-700 hover:text-blue-500">
+            <Link href="/about" className="text-gray-700 hover:text-blue-500">
               About
-            </a>
-            <a href="#" className="text-gray-700 hover:text-blue-500">
-              Blog
-            </a>
-            <a href="/contact" className="text-gray-700 hover:text-blue-500">
+            </Link>
+            <Link href="/contact" className="text-gray-700 hover:text-blue-500">
               Contact
-            </a>
-            <a href="#" className="text-gray-700 hover:text-blue-500">
-              Pages
-            </a>
+            </Link>
           </div>
         )}
       </nav>
